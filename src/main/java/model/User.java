@@ -1,4 +1,12 @@
-package model;
+package com.laundry.model;
 
-public record User(int userId, String fullName, String username, String passwordHash, String role, String status, String dateCreated) {
+public record User(
+        int userId,
+        String fullName,
+        String username,
+        String passwordHash,
+        String role,
+        String status,
+        String dateCreated
+) {
 }

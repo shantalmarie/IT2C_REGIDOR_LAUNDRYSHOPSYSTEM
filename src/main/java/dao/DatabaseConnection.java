@@ -1,4 +1,4 @@
-package dao;
+package com.laundry.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,28 +10,16 @@ public class DatabaseConnection {
 
     public static Connection connect() {
         try {
-            return DriverManager.getConnection(URL);
-        } catch (SQLException e) {
-            return null;
-        }
-    }
-
-    public static void initializeDatabase() {
-        String sql = "CREATE TABLE IF NOT EXISTS users (" +
-                "user_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "full_name TEXT NOT NULL, " +
-                "username TEXT UNIQUE NOT NULL, " +
-                "password_hash TEXT NOT NULL, " +
-                "role TEXT NOT NULL, " +
-                "status TEXT NOT NULL, " +
-                "date_created TEXT NOT NULL)";
-        try (Connection conn = connect();
-             Statement stmt = conn.createStatement()) {
+            Connection conn = DriverManager.getConnection(URL);
             if (conn != null) {
-                stmt.execute(sql);
+                try (Statement stmt = conn.createStatement()) {
+                    stmt.execute("PRAGMA foreign_keys = ON;");
+                }
             }
+            return conn;
         } catch (SQLException e) {
-            System.out.println("Database initialization error: " + e.getMessage());
+            System.out.println("Connection error: " + e.getMessage());
+            return null;
         }
     }
 }

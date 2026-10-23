@@ -1,6 +1,6 @@
-package dao;
+package com.laundry.dao;
 
-import model.User;
+import com.laundry.model.User;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 public class UserDao {
 
-    public static boolean registerUser(String fullName, String username, String passwordHash, String role) {
+    public boolean registerUser(String fullName, String username, String passwordHash, String role) {
         String sql = "INSERT INTO users (full_name, username, password_hash, role, status, date_created) VALUES (?, ?, ?, ?, 'PENDING', datetime('now'))";
         try (Connection conn = DatabaseConnection.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -23,7 +23,7 @@ public class UserDao {
         }
     }
 
-    public static User login(String username, String passwordHash) {
+    public User login(String username, String passwordHash) {
         String sql = "SELECT user_id, full_name, username, password_hash, role, status, date_created FROM users WHERE username = ? AND password_hash = ?";
         try (Connection conn = DatabaseConnection.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
