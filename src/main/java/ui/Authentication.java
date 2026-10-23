@@ -80,13 +80,11 @@ public class Authentication {
 
         User user = userDao.login(username, password);
         if (user != null) {
-            System.out.println("-> Login Successful! Welcome, " + user.fullName() + " (" + user.role() + ")");
-            System.out.println("-> Account Status: " + user.status() + " (Waiting for approval)");
-
             if ("PENDING".equalsIgnoreCase(user.status())) {
+                System.out.println("-> Login Failed: Account is still PENDING approval.");
                 return;
             }
-
+            System.out.println("-> Login Successful! Welcome, " + user.fullName() + " (" + user.role() + ")");
             routeUserRole(user);
         } else {
             System.out.println("-> Invalid username or password.");
@@ -96,27 +94,12 @@ public class Authentication {
     private void routeUserRole(User user) {
         String role = user.role();
         if ("Administrator".equalsIgnoreCase(role)) {
-            adminDashboard();
+            AdminMenu adminMenu = new AdminMenu(userDao, scanner);
+            adminMenu.show();
         } else if ("Staff".equalsIgnoreCase(role)) {
             staffDashboard();
         } else {
             attendantDashboard();
-        }
-    }
-
-    private void adminDashboard() {
-        while (true) {
-            System.out.println("\n--- ADMINISTRATOR DASHBOARD ---");
-            System.out.println("1. Logout");
-            System.out.print("Choose an option: ");
-            int opt = scanner.nextInt();
-            scanner.nextLine();
-            if (opt == 1) {
-                System.out.println("-> Logged out successfully.");
-                break;
-            } else {
-                System.out.println("Invalid option.");
-            }
         }
     }
 
